@@ -37,7 +37,6 @@ def evaluate_guess():
     if guess in state_to_guess:
         x = state_list.index(guess)
         state_coordinate = coordinates[x]
-        # print(state_coordinate)
         label.write_label(state_coordinate, guess)
         score += 1
         state_to_guess.remove(guess)
@@ -61,13 +60,8 @@ while not game_over:
     guess_state()
     evaluate_guess()
 
-state_remaining = []
-for state in state_list:
-    if state in guessed_state:
-        pass
-    else:
-        state_remaining.append(state)
 
+state_remaining =[state for state in state_list if state not in guessed_state]
 datum = pd.DataFrame(state_remaining)
 
 datum.to_csv("state_to_review.csv")
