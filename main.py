@@ -17,23 +17,31 @@ coordinates = []
 
 for i in range(len(data_x)):
     coordinates.append((data_x[i], data_y[i]))
-
+# print(coordinates)
 state_list = data.state.to_list()
+state_to_guess = data.state.to_list()
+guessed_state = []
 
 score = 0
 guess = ""
 game_over = False
 
-screen.title(f"{score}/50 States Correct")
+screen.title(f"US State Guessing Game")
 
 
 def evaluate_guess():
     global score
-    if guess in state_list:
+    global game_over
+    if guess == "Exit":
+        game_over = True
+    if guess in state_to_guess:
         x = state_list.index(guess)
         state_coordinate = coordinates[x]
+        # print(state_coordinate)
         label.write_label(state_coordinate, guess)
         score += 1
+        state_to_guess.remove(guess)
+        guessed_state.append(guess)
     else:
         return
 
@@ -48,7 +56,18 @@ def on_exit():
 
 
 while not game_over:
+    if score == 50:
+        game_over = True
     guess_state()
     evaluate_guess()
 
-screen.exitonclick()
+state_remaining = []
+for state in state_list:
+    if state in guessed_state:
+        pass
+    else:
+        state_remaining.append(state)
+
+datum = pd.DataFrame(state_remaining)
+
+datum.to_csv("state_to_review.csv")
